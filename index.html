@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arbeitszeitrechner – Arbeitszeit mit Pausen online berechnen</title>
+<meta name="description" content="Arbeitszeitrechner kostenlos: Arbeitsbeginn, Arbeitsende und Pausen eingeben und sofort Nettoarbeitszeit, Dezimalstunden, Wochen- und Monatsstunden berechnen – mit Pausen- und Ruhezeit-Check nach ArbZG.">
+<meta name="robots" content="index, follow">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="de_DE">
+<meta property="og:title" content="Arbeitszeitrechner – Arbeitszeit mit Pausen online berechnen">
+<meta property="og:description" content="Kostenloser Arbeitszeitrechner mit Pausen nach § 4 ArbZG, Ruhezeit-Check, Wochenübersicht und Dezimalstunden.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@graph":[
+    {
+      "@type":"WebApplication",
+      "name":"Arbeitszeitrechner",
+      "applicationCategory":"BusinessApplication",
+      "operatingSystem":"Alle",
+      "inLanguage":"de-DE",
+      "description":"Arbeitszeitrechner zur Berechnung der Nettoarbeitszeit mit Pausen, Ruhezeit-Check, Wochen- und Monatsstunden sowie Dezimalstunden.",
+      "offers":{"@type":"Offer","price":"0","priceCurrency":"EUR"}
+    },
+    {
+      "@type":"FAQPage",
+      "mainEntity":[
+        {"@type":"Question","name":"Wie funktioniert der Arbeitszeitrechner?","acceptedAnswer":{"@type":"Answer","text":"Sie geben Arbeitsbeginn, Arbeitsende und Ihre Pausen ein. Der Arbeitszeitrechner zieht die Pausen von der Anwesenheitszeit ab und zeigt die Nettoarbeitszeit in Stunden und Minuten sowie in Dezimalstunden."}},
+        {"@type":"Question","name":"Wie viele Stunden sind 9 bis 18 Uhr mit Pause?","acceptedAnswer":{"@type":"Answer","text":"Von 9 bis 18 Uhr sind Sie 9 Stunden anwesend. Mit 30 Minuten Pause ergibt das 8 Stunden 30 Minuten Arbeitszeit, also 8,5 Dezimalstunden."}},
+        {"@type":"Question","name":"Ab wann muss ich eine Pause machen?","acceptedAnswer":{"@type":"Answer","text":"Nach § 4 ArbZG ist bei mehr als 6 Stunden Arbeit eine Pause von mindestens 30 Minuten vorgeschrieben, bei mehr als 9 Stunden mindestens 45 Minuten. Bei genau 6 Stunden ist keine Pause Pflicht."}},
+        {"@type":"Question","name":"Rechnet der Arbeitszeitrechner auch Nachtschichten?","acceptedAnswer":{"@type":"Answer","text":"Ja. Liegt das Arbeitsende vor dem Arbeitsbeginn, erkennt der Rechner eine Schicht über Mitternacht und rechnet automatisch 24 Stunden hinzu."}},
+        {"@type":"Question","name":"Wie rechne ich Arbeitszeit in Dezimalstunden um?","acceptedAnswer":{"@type":"Answer","text":"Teilen Sie die Minuten durch 60 und addieren Sie das Ergebnis zu den vollen Stunden. 7 Stunden 45 Minuten sind 7 + 45/60 = 7,75 Dezimalstunden."}},
+        {"@type":"Question","name":"Ist der Arbeitszeitrechner kostenlos?","acceptedAnswer":{"@type":"Answer","text":"Ja, der Arbeitszeitrechner ist kostenlos und funktioniert ohne Anmeldung direkt im Browser."}}
+      ]
+    }
+  ]
+}
+</script>
+
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <a href="#" class="logo" aria-label="Arbeitszeitrechner Startseite">
+      <span class="logo-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0f1b2d" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+      </span>
+      <span>Arbeitszeit<em>rechner</em></span>
+    </a>
+    <button class="burger" aria-label="Menü öffnen" onclick="document.querySelector('.menu').classList.toggle('open')"><span></span><span></span><span></span></button>
+    <nav>
+      <ul class="menu">
+        <li><a href="#" class="active">Arbeitszeitrechner</a></li>
+        <li><a href="#pausenregelung">Pausenregelung</a></li>
+        <li><a href="#kontakt">Kontakt</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="wrap">
+    <h1>Arbeitszeitrechner<span>Arbeitszeit mit Pausen online berechnen</span></h1>
+    <p>Mit diesem <b>Arbeitszeitrechner</b> ermitteln Sie Ihre Nettoarbeitszeit in wenigen Sekunden: Arbeitsbeginn, Arbeitsende und Pausen eintragen – fertig. Zusätzlich prüft der Rechner Pausen und Ruhezeit nach dem Arbeitszeitgesetz und rechnet Ihr Ergebnis in Dezimalstunden um.</p>
+    <div class="badges">
+      <span class="badge">✓ Pausen nach § 4 ArbZG</span>
+      <span class="badge">✓ Ruhezeit-Check (11 Std.)</span>
+      <span class="badge">✓ Nachtschicht</span>
+      <span class="badge">✓ Woche &amp; Monat</span>
+    </div>
+  </div>
+</div>
+
+<main class="wrap">
+  <!-- ===== CALCULATOR ===== -->
+  <div class="calc" id="rechner">
+    <div class="calc-head"><h2>Arbeitszeit berechnen</h2></div>
+    <div class="tabs" role="tablist">
+      <button class="tab active" data-tab="taeglich" role="tab">Täglich</button>
+      <button class="tab" data-tab="woechentlich" role="tab">Wöchentlich</button>
+      <button class="tab" data-tab="monatlich" role="tab">Monatlich</button>
+    </div>
+
+    <!-- Täglich -->
+    <div class="panel active" id="taeglich">
+      <div class="grid2">
+        <div class="fields">
+          <div class="field">
+            <label for="start">Arbeitsbeginn</label>
+            <input type="time" id="start" value="08:00">
+          </div>
+          <div class="field">
+            <label for="ende">Arbeitsende</label>
+            <input type="time" id="ende" value="16:45">
+          </div>
+          <div class="full">
+            <span class="lbl">Pausenzeiten <button type="button" class="link-btn" id="addPause">+ Pause hinzufügen</button></span>
+            <div class="pausen" id="pausen"></div>
+          </div>
+          <label class="check full"><input type="checkbox" id="autoPause">
+            <span>Gesetzliche Pausen automatisch berechnen<small>30 Min. bei mehr als 6 Std. • 45 Min. bei mehr als 9 Std.</small></span>
+          </label>
+          <div class="field full">
+            <label for="folge">Arbeitsbeginn am Folgetag <small>(optional – Ruhezeit-Check nach § 5 ArbZG)</small></label>
+            <input type="time" id="folge">
+          </div>
+          <div class="btns full">
+            <button class="btn btn-primary" id="calcBtn">Arbeitszeit berechnen</button>
+            <button class="btn btn-ghost" id="resetBtn">Zurücksetzen</button>
+          </div>
+        </div>
+
+        <div class="result" aria-live="polite">
+          <h3>Ihre Nettoarbeitszeit</h3>
+          <div class="big" id="rNetto">8:15<small>Std.</small></div>
+          <div class="stats">
+            <div class="stat"><span>Dezimalstunden</span><b id="rDez">8,25</b></div>
+            <div class="stat"><span>Bruttoarbeitszeit</span><b id="rBrutto">8:45</b></div>
+            <div class="stat"><span>Gesamtpause</span><b id="rPause">30 Min.</b></div>
+            <div class="stat"><span>Industrieminuten</span><b id="rInd">825</b></div>
+          </div>
+          <div class="notes" id="rNotes"></div>
+          <div class="actions">
+            <button class="act main" id="toWeek">+ Zur Woche</button>
+            <button class="act" id="copyBtn">Kopieren</button>
+            <button class="act" id="printBtn">Drucken</button>
+          </div>
+          <div class="share">Teilen:
+            <a id="shWa" target="_blank" rel="noopener nofollow">WhatsApp</a>
+            <a id="shLi" target="_blank" rel="noopener nofollow">LinkedIn</a>
+            <a id="shX" target="_blank" rel="noopener nofollow">X</a>
+            <a id="shMail">E-Mail</a>
+            <button id="shLink">Link kopieren</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Wöchentlich -->
+    <div class="panel" id="woechentlich">
+      <table class="wtable">
+        <thead><tr><th>Tag</th><th>Beginn</th><th>Ende</th><th>Pause (Min.)</th><th style="text-align:right">Netto</th></tr></thead>
+        <tbody id="wbody"></tbody>
+      </table>
+      <div class="sumrow">
+        <div class="stat"><span>Gesamtstunden</span><b id="wTotal">0:00</b></div>
+        <div class="stat"><span>Ø pro Arbeitstag</span><b id="wAvg">0:00</b></div>
+        <div class="stat"><span>Wochen-Soll (Std.)</span><b><input type="number" id="wSoll" value="40" min="0" step="0.5" aria-label="Wochen-Soll in Stunden"></b></div>
+        <div class="stat"><span>Über-/Minusstunden</span><b id="wDiff">0:00</b></div>
+      </div>
+      <div class="btns" style="margin-top:18px">
+        <button class="btn btn-ghost" id="wDemo">Beispielwoche laden</button>
+        <button class="btn btn-ghost" id="wReset">Zurücksetzen</button>
+      </div>
+      <p class="tip">Tipp: Im Tab „Täglich“ übernimmt „+ Zur Woche“ Ihre Tageswerte automatisch in den nächsten freien Wochentag.</p>
+    </div>
+
+    <!-- Monatlich -->
+    <div class="panel" id="monatlich">
+      <div class="grid2">
+        <div class="fields">
+          <div class="field">
+            <label for="mWoche">Wochenarbeitszeit (Std.)</label>
+            <input type="number" id="mWoche" value="40" min="0" step="0.5">
+          </div>
+          <div class="field">
+            <label for="mTage">Arbeitstage pro Woche</label>
+            <input type="number" id="mTage" value="5" min="1" max="7">
+          </div>
+          <div class="field full">
+            <label for="mLohn">Stundenlohn in € <small>(optional)</small></label>
+            <input type="number" id="mLohn" placeholder="z. B. 14,60" min="0" step="0.01">
+          </div>
+          <p class="hint full">Berechnung nach der üblichen Formel: Wochenstunden × 52 Wochen ÷ 12 Monate.</p>
+        </div>
+        <div class="result">
+          <h3>Arbeitsstunden pro Monat</h3>
+          <div class="big" id="mMonat">173,33<small>Std.</small></div>
+          <div class="stats">
+            <div class="stat"><span>In Stunden:Minuten</span><b id="mMonatHM">173:20</b></div>
+            <div class="stat"><span>Pro Arbeitstag</span><b id="mTag">8:00</b></div>
+            <div class="stat"><span>Pro Jahr</span><b id="mJahr">2.080 Std.</b></div>
+            <div class="stat"><span>Brutto pro Monat</span><b id="mGehalt">–</b></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== DEZIMAL CONVERTER ===== -->
+  <div class="conv" id="dezimal">
+    <div class="conv-box">
+      <h3>Zeit → Dezimalstunden</h3>
+      <div class="conv-row">
+        <input type="text" id="cZeit" value="7:45" inputmode="numeric" aria-label="Zeit in Stunden:Minuten">
+        <span class="arrow">→</span>
+        <output id="cZeitOut">7,75</output>
+      </div>
+      <p class="hint" style="margin-top:8px">Format Std:Min, z. B. 7:45 oder 38:30</p>
+    </div>
+    <div class="conv-box">
+      <h3>Dezimalstunden → Zeit</h3>
+      <div class="conv-row">
+        <input type="text" id="cDez" value="6,4" inputmode="decimal" aria-label="Dezimalstunden">
+        <span class="arrow">→</span>
+        <output id="cDezOut">6:24</output>
+      </div>
+      <p class="hint" style="margin-top:8px">Komma oder Punkt möglich, z. B. 6,4 oder 6.4</p>
+    </div>
+  </div>
+
+  <!-- ===== SO FUNKTIONIERT'S ===== -->
+  <section class="block">
+    <span class="eyebrow">Anleitung</span>
+    <h2>So nutzen Sie den Arbeitszeitrechner</h2>
+    <p class="lead">Der Arbeitszeitrechner ist so aufgebaut, dass Sie ohne Vorwissen sofort ein korrektes Ergebnis erhalten – egal ob Sie einen Stundenzettel ausfüllen, Überstunden kontrollieren oder Ihre Wochenstunden mit dem Arbeitsvertrag vergleichen möchten.</p>
+    <div class="steps">
+      <div class="card"><div class="num">1</div><h3>Uhrzeiten eintragen</h3><p>Tragen Sie ein, wann Ihr Arbeitstag beginnt und endet. Endet die Schicht nach Mitternacht, rechnet der Arbeitszeitrechner automatisch richtig.</p></div>
+      <div class="card"><div class="num">2</div><h3>Pausen festlegen</h3><p>30 Minuten sind voreingestellt. Mehrere Pausen fügen Sie mit „Pause hinzufügen“ ein – oder Sie lassen die gesetzliche Pause automatisch ansetzen.</p></div>
+      <div class="card"><div class="num">3</div><h3>Ergebnis nutzen</h3><p>Sie sehen Netto- und Bruttoarbeitszeit, Pausen und Dezimalstunden. Übernehmen Sie den Tag in die Woche, kopieren oder drucken Sie das Ergebnis.</p></div>
+    </div>
+  </section>
+
+  <!-- ===== FORMEL ===== -->
+  <section class="block">
+    <span class="eyebrow">Formel &amp; Beispiele</span>
+    <h2>Arbeitszeit berechnen – so rechnet der Arbeitszeitrechner</h2>
+    <div class="split">
+      <div class="content">
+        <div class="formula">Netto = <span>Ende</span> − <span>Beginn</span> − <span>Pausen</span></div>
+        <p>Die Zeit zwischen Arbeitsbeginn und Arbeitsende nennt man <b>Bruttoarbeitszeit</b> oder Anwesenheitszeit. Ziehen Sie davon sämtliche Ruhepausen ab, erhalten Sie die <b>Nettoarbeitszeit</b> – nur sie gilt als Arbeitszeit im Sinne des Arbeitszeitgesetzes.</p>
+        <p><b>Von Hand rechnen:</b> Behandeln Sie Stunden und Minuten getrennt. Bei 09:00 bis 18:15 Uhr sind es 9 Stunden und 15 Minuten. Nach 45 Minuten Pause bleiben 8 Stunden 30 Minuten.</p>
+        <p><b>Schicht über Mitternacht:</b> Addieren Sie 24 Stunden zum Arbeitsende. 21:30 bis 05:45 Uhr wird zu 29:45 − 21:30 = 8:15 Stunden Anwesenheit.</p>
+      </div>
+      <div class="tbl">
+        <table>
+          <thead><tr><th>Arbeitszeit</th><th>Pause</th><th>Netto</th><th>Dezimal</th></tr></thead>
+          <tbody>
+            <tr><td>07:15 – 16:45</td><td>30 Min.</td><td><b>9:00</b></td><td>9,00</td></tr>
+            <tr><td>09:00 – 18:15</td><td>45 Min.</td><td><b>8:30</b></td><td>8,50</td></tr>
+            <tr><td>06:30 – 17:00</td><td>45 Min.</td><td><b>9:45</b></td><td>9,75</td></tr>
+            <tr><td>21:30 – 05:45</td><td>30 Min.</td><td><b>7:45</b></td><td>7,75</td></tr>
+            <tr><td>12:00 – 16:00</td><td>keine</td><td><b>4:00</b></td><td>4,00</td></tr>
+          </tbody>
+          <caption>Beispielrechnungen mit dem Arbeitszeitrechner</caption>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== PAUSENREGELUNG ===== -->
+  <section class="block" id="pausenregelung">
+    <span class="eyebrow">Pausenregelung</span>
+    <h2>Arbeitszeitrechner mit Pausen: Was das Gesetz vorschreibt</h2>
+    <p class="lead">Wie lange Ihre Pause mindestens sein muss, hängt von der Dauer Ihrer Arbeitszeit ab. Grundlage ist § 4 des Arbeitszeitgesetzes (ArbZG), für Jugendliche gilt § 11 des Jugendarbeitsschutzgesetzes (JArbSchG).</p>
+    <div class="split" style="margin-top:26px">
+      <div class="tbl">
+        <table>
+          <thead><tr><th>Erwachsene – Arbeitszeit</th><th>Mindestpause</th></tr></thead>
+          <tbody>
+            <tr><td>bis 6 Stunden</td><td><b>keine Pflicht</b></td></tr>
+            <tr><td>mehr als 6 bis 9 Stunden</td><td><b>30 Minuten</b></td></tr>
+            <tr><td>mehr als 9 Stunden</td><td><b>45 Minuten</b></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="tbl">
+        <table>
+          <thead><tr><th>Jugendliche unter 18</th><th>Mindestpause</th></tr></thead>
+          <tbody>
+            <tr><td>mehr als 4,5 bis 6 Stunden</td><td><b>30 Minuten</b></td></tr>
+            <tr><td>mehr als 6 Stunden</td><td><b>60 Minuten</b></td></tr>
+            <tr><td>ohne Pause am Stück</td><td><b>max. 4,5 Std.</b></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="content" style="margin-top:24px">
+      <ul>
+        <li><b>Aufteilung:</b> Pausen dürfen gestückelt werden, jeder Abschnitt muss aber mindestens 15 Minuten lang sein.</li>
+        <li><b>Spätester Zeitpunkt:</b> Länger als 6 Stunden am Stück dürfen Erwachsene nicht ohne Pause arbeiten.</li>
+        <li><b>Vergütung:</b> Ruhepausen zählen nicht zur Arbeitszeit und sind in der Regel unbezahlt – abweichende Regeln kann Ihr Arbeits- oder Tarifvertrag enthalten.</li>
+        <li><b>Grenzfall 6 Stunden:</b> Wer genau 6:00 Stunden arbeitet, muss keine Pause machen. Bereits ab 6:01 Stunden sind 30 Minuten Pflicht.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ===== HÖCHSTARBEITSZEIT ===== -->
+  <section class="block">
+    <span class="eyebrow">Arbeitszeitgesetz</span>
+    <h2>Höchstarbeitszeit und Ruhezeit im Überblick</h2>
+    <div class="facts">
+      <div class="fact"><b>8 Std.</b><span>Regel pro Werktag</span></div>
+      <div class="fact"><b>10 Std.</b><span>mit Ausgleich</span></div>
+      <div class="fact"><b>48 Std.</b><span>pro Woche im Schnitt</span></div>
+      <div class="fact"><b>11 Std.</b><span>Ruhezeit</span></div>
+    </div>
+    <div class="content">
+      <p>Nach § 3 ArbZG beträgt die werktägliche Arbeitszeit grundsätzlich <b>8 Stunden</b>. Sie darf auf bis zu <b>10 Stunden</b> verlängert werden, wenn innerhalb von sechs Kalendermonaten oder 24 Wochen im Durchschnitt 8 Stunden pro Werktag nicht überschritten werden. Da auch der Samstag als Werktag zählt, ergibt sich eine durchschnittliche Wochenhöchstgrenze von <b>48 Stunden</b>.</p>
+      <p>Zwischen dem Ende eines Arbeitstages und dem Beginn des nächsten müssen laut § 5 ArbZG mindestens <b>11 Stunden ununterbrochene Ruhezeit</b> liegen. Wer also um 21:00 Uhr Feierabend macht, darf frühestens um 08:00 Uhr wieder anfangen. Unser Arbeitszeitrechner prüft das automatisch, sobald Sie den Arbeitsbeginn am Folgetag eintragen.</p>
+      <p>Als Nachtzeit gilt die Zeit von 23 bis 6 Uhr. Seit dem Urteil des Bundesarbeitsgerichts vom 13.09.2022 sind Arbeitgeber zudem verpflichtet, die Arbeitszeit ihrer Beschäftigten zu erfassen – ein Arbeitszeitrechner hilft, die eigenen Aufzeichnungen zu kontrollieren.</p>
+    </div>
+  </section>
+
+  <!-- ===== ZIELGRUPPEN ===== -->
+  <section class="block">
+    <span class="eyebrow">Einsatzbereiche</span>
+    <h2>Für wen eignet sich der Arbeitszeitrechner?</h2>
+    <div class="steps">
+      <div class="card"><h3>Vollzeit &amp; Teilzeit</h3><p>Vergleichen Sie Ihre tatsächlichen Stunden mit dem Soll aus dem Arbeitsvertrag und erkennen Sie Plus- oder Minusstunden auf einen Blick.</p></div>
+      <div class="card"><h3>Schichtarbeit</h3><p>Nachtschichten über Mitternacht und die 11-stündige Ruhezeit zwischen zwei Schichten berechnet der Rechner in einem Schritt.</p></div>
+      <div class="card"><h3>Minijob &amp; Freelancer</h3><p>Erfassen Sie kurze Einsätze minutengenau und rechnen Sie abrechenbare Stunden direkt in Dezimalstunden für die Rechnung um.</p></div>
+    </div>
+  </section>
+
+  <!-- ===== MONATSTABELLE ===== -->
+  <section class="block">
+    <span class="eyebrow">Monatsstunden</span>
+    <h2>Arbeitsstunden pro Monat – Tabelle</h2>
+    <p class="lead">Arbeitsverträge rechnen meist mit einem durchschnittlichen Monat. Die Formel lautet: Wochenstunden × 52 ÷ 12. Den genauen Wert für Ihre Stundenzahl liefert der Tab „Monatlich“ im Arbeitszeitrechner.</p>
+    <div class="tbl" style="margin-top:22px">
+      <table>
+        <thead><tr><th>Wochenstunden</th><th>Ø pro Monat</th><th>Pro Tag (5-Tage-Woche)</th></tr></thead>
+        <tbody>
+          <tr><td>25 Std.</td><td><b>108,33 Std.</b></td><td>5:00 Std.</td></tr>
+          <tr><td>32 Std.</td><td><b>138,67 Std.</b></td><td>6:24 Std.</td></tr>
+          <tr><td>39 Std.</td><td><b>169,00 Std.</b></td><td>7:48 Std.</td></tr>
+          <tr><td>40 Std.</td><td><b>173,33 Std.</b></td><td>8:00 Std.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ===== WEITERE RECHNER (Backlinks zur Hauptseite) ===== -->
+  <section class="block">
+    <span class="eyebrow">Weitere Rechner</span>
+    <h2>Mehr Tools rund um Arbeitszeit und Lohn</h2>
+    <p class="lead">Den vollständigen <a href="https://arbeitszeitsrechner.com.de/">Arbeitszeitrechner</a> mit ausführlichen Ratgebern zu Pausen, Überstunden und Arbeitsrecht finden Sie auf arbeitszeitsrechner.com.de. Dort gibt es außerdem diese Rechner:</p>
+    <div class="links">
+      <a href="https://arbeitszeitsrechner.com.de/ueberstundenrechner"><b>Überstundenrechner</b><span>Was Ihre Mehrarbeit inklusive Zuschlag brutto wert ist.</span></a>
+      <a href="https://arbeitszeitsrechner.com.de/stundenlohnrechner"><b>Stundenlohnrechner</b><span>Vom Monatsgehalt zum Stundenlohn – mit Mindestlohn-Vergleich.</span></a>
+      <a href="https://arbeitszeitsrechner.com.de/teilzeitrechner"><b>Teilzeitrechner</b><span>So viel Gehalt bleibt bei reduzierten Wochenstunden.</span></a>
+      <a href="https://arbeitszeitsrechner.com.de/urlaubsrechner"><b>Urlaubsrechner</b><span>Urlaubsanspruch bei Teilzeit oder Jobwechsel ermitteln.</span></a>
+      <a href="https://arbeitszeitsrechner.com.de/pendlerpauschale"><b>Pendlerpauschale</b><span>Fahrtkosten zur Arbeit steuerlich absetzen.</span></a>
+      <a href="https://arbeitszeitsrechner.com.de/ratgeber"><b>Ratgeber Arbeitszeit</b><span>Pausen, Überstunden, Fahrzeit und mehr verständlich erklärt.</span></a>
+    </div>
+  </section>
+
+  <!-- ===== FAQ ===== -->
+  <section class="block">
+    <span class="eyebrow">FAQ</span>
+    <h2>Häufige Fragen zum Arbeitszeitrechner</h2>
+    <div class="faq">
+      <details open><summary>Wie funktioniert der Arbeitszeitrechner?</summary><p>Sie geben Arbeitsbeginn, Arbeitsende und Ihre Pausen ein. Der Arbeitszeitrechner zieht die Pausen von der Anwesenheitszeit ab und zeigt die Nettoarbeitszeit in Stunden und Minuten sowie in Dezimalstunden.</p></details>
+      <details><summary>Wie viele Stunden sind 9 bis 18 Uhr mit Pause?</summary><p>Von 9 bis 18 Uhr sind Sie 9 Stunden anwesend. Mit 30 Minuten Pause ergibt das 8 Stunden 30 Minuten Arbeitszeit, also 8,5 Dezimalstunden.</p></details>
+      <details><summary>Ab wann muss ich eine Pause machen?</summary><p>Nach § 4 ArbZG ist bei mehr als 6 Stunden Arbeit eine Pause von mindestens 30 Minuten vorgeschrieben, bei mehr als 9 Stunden mindestens 45 Minuten. Bei genau 6 Stunden ist keine Pause Pflicht.</p></details>
+      <details><summary>Rechnet der Arbeitszeitrechner auch Nachtschichten?</summary><p>Ja. Liegt das Arbeitsende vor dem Arbeitsbeginn, erkennt der Rechner eine Schicht über Mitternacht und rechnet automatisch 24 Stunden hinzu.</p></details>
+      <details><summary>Wie rechne ich Arbeitszeit in Dezimalstunden um?</summary><p>Teilen Sie die Minuten durch 60 und addieren Sie das Ergebnis zu den vollen Stunden. 7 Stunden 45 Minuten sind 7 + 45/60 = 7,75 Dezimalstunden.</p></details>
+      <details><summary>Ist der Arbeitszeitrechner kostenlos?</summary><p>Ja, der Arbeitszeitrechner ist kostenlos und funktioniert ohne Anmeldung direkt im Browser.</p></details>
+    </div>
+  </section>
+</main>
+
+<footer id="kontakt">
+  <div class="wrap">
+    <div class="foot">
+      <div>
+        <a href="#" class="logo"><span>Arbeitszeit<em>rechner</em></span></a>
+        <p style="margin-top:10px">Kostenloser Arbeitszeitrechner für Vollzeit, Teilzeit, Minijob und Schichtarbeit – mit Pausen und Ruhezeit nach dem deutschen Arbeitszeitgesetz.</p>
+      </div>
+      <div>
+        <h4>Rechner</h4>
+        <ul>
+          <li><a href="#rechner">Arbeitszeitrechner</a></li>
+          <li><a href="#dezimal">Dezimalstunden umrechnen</a></li>
+          <li><a href="#pausenregelung">Pausenregelung</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Kontakt &amp; Rechtliches</h4>
+        <ul>
+          <li><a href="#">Kontakt</a></li>
+          <li><a href="#">Impressum</a></li>
+          <li><a href="#">Datenschutz</a></li>
+        </ul>
+      </div>
+    </div>
+    <p class="copy">© <span id="jahr"></span> Arbeitszeitrechner. Alle Berechnungen ohne Gewähr – maßgeblich sind Gesetz, Arbeits- und Tarifvertrag.</p>
+  </div>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+  const $ = id => document.getElementById(id);
+  const toMin = t => { if(!t) return null; const p=t.split(':'); if(p.length<2) return null; return (+p[0])*60 + (+p[1]); };
+  const fmt = m => { const neg=m<0; m=Math.abs(Math.round(m)); return (neg?'-':'')+Math.floor(m/60)+':'+String(m%60).padStart(2,'0'); };
+  const sign = m => (m>0?'+':'')+fmt(m);
+  const dez = m => (m/60).toLocaleString('de-DE',{minimumFractionDigits:2,maximumFractionDigits:2});
+  const eur = v => v.toLocaleString('de-DE',{style:'currency',currency:'EUR'});
+  const span = (s,e) => { let d=e-s; if(d<0) d+=1440; return d; };
+  const legal = b => (b-30 > 540) ? 45 : (b > 360 ? 30 : 0);
+  const toast = msg => { const t=$('toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(t._h); t._h=setTimeout(()=>t.classList.remove('show'),2200); };
+  const copy = txt => {
+    if(navigator.clipboard && window.isSecureContext){ navigator.clipboard.writeText(txt).then(()=>toast('In die Zwischenablage kopiert')); }
+    else { const a=document.createElement('textarea'); a.value=txt; document.body.appendChild(a); a.select(); try{document.execCommand('copy');toast('In die Zwischenablage kopiert');}catch(e){} a.remove(); }
+  };
+
+  /* Tabs */
+  document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>showTab(b.dataset.tab)));
+  function showTab(id){
+    document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x.dataset.tab===id));
+    document.querySelectorAll('.panel').forEach(x=>x.classList.toggle('active',x.id===id));
+  }
+
+  /* ===== Täglich ===== */
+  const pl=$('pausen');
+  function addPause(v){
+    const row=document.createElement('div'); row.className='prow';
+    row.innerHTML='<input type="number" min="0" step="5" value="'+v+'" aria-label="Pause in Minuten"><span>Min.</span><button type="button" class="x" aria-label="Pause entfernen">×</button>';
+    row.querySelector('.x').addEventListener('click',()=>{ row.remove(); calcDay(); });
+    row.querySelector('input').addEventListener('input',calcDay);
+    pl.appendChild(row);
+  }
+  $('addPause').addEventListener('click',()=>{ addPause(15); calcDay(); });
+
+  let last=null;
+  function calcDay(){
+    const s=toMin($('start').value), e=toMin($('ende').value);
+    if(s===null||e===null) return;
+    const brutto=span(s,e);
+    let p=[...pl.querySelectorAll('input')].reduce((a,i)=>a+Math.max(0,parseInt(i.value,10)||0),0);
+    if($('autoPause').checked) p=Math.max(p,legal(brutto));
+    p=Math.min(p,brutto);
+    const n=brutto-p;
+
+    $('rNetto').innerHTML=fmt(n)+'<small>Std.</small>';
+    $('rDez').textContent=dez(n);
+    $('rBrutto').textContent=fmt(brutto);
+    $('rPause').textContent=p+' Min.';
+    $('rInd').textContent=Math.round(n/60*100);
+
+    const notes=[];
+    if(e<s) notes.push(['info','Nachtschicht über Mitternacht erkannt – 24 Stunden wurden automatisch berücksichtigt.']);
+    const req = n>540 ? 45 : (n>360 ? 30 : 0);
+    if(p<req) notes.push(['warn','Bei '+fmt(n)+' Std. Arbeit sind laut § 4 ArbZG mindestens '+req+' Minuten Pause vorgeschrieben.']);
+    if(n>600) notes.push(['warn','Mehr als 10 Stunden: Die gesetzliche Höchstarbeitszeit nach § 3 ArbZG ist überschritten.']);
+    const f=toMin($('folge').value);
+    if(f!==null){
+      let r=span(e,f); if(r===0) r=1440;
+      if(r<660) notes.push(['warn','Ruhezeit nur '+fmt(r)+' Std. – vorgeschrieben sind mindestens 11 Stunden (§ 5 ArbZG).']);
+      else notes.push(['ok','Ruhezeit von '+fmt(r)+' Std. bis zum nächsten Arbeitsbeginn ist eingehalten.']);
+    }
+    if(!notes.some(x=>x[0]==='warn')) notes.unshift(['ok','Ihre Pausen entsprechen dem Arbeitszeitgesetz.']);
+    $('rNotes').innerHTML=notes.map(x=>'<div class="notice '+(x[0]==='ok'?'':x[0])+'">'+x[1]+'</div>').join('');
+
+    last={start:$('start').value,ende:$('ende').value,pause:p,netto:n};
+    const url=location.href.split('#')[0];
+    const txt='Meine Arbeitszeit: '+last.start+'–'+last.ende+' Uhr, '+p+' Min. Pause = '+fmt(n)+' Std. ('+dez(n)+' Dezimalstunden) – berechnet mit dem Arbeitszeitrechner';
+    last.txt=txt;
+    $('shWa').href='https://wa.me/?text='+encodeURIComponent(txt+' '+url);
+    $('shLi').href='https://www.linkedin.com/sharing/share-offsite/?url='+encodeURIComponent(url);
+    $('shX').href='https://twitter.com/intent/tweet?text='+encodeURIComponent(txt)+'&url='+encodeURIComponent(url);
+    $('shMail').href='mailto:?subject='+encodeURIComponent('Meine Arbeitszeit')+'&body='+encodeURIComponent(txt+'\n'+url);
+  }
+  ['start','ende','folge','autoPause'].forEach(id=>$(id).addEventListener('input',calcDay));
+  $('autoPause').addEventListener('change',calcDay);
+  $('calcBtn').addEventListener('click',()=>{ calcDay(); toast('Arbeitszeit berechnet'); });
+  $('resetBtn').addEventListener('click',()=>{
+    $('start').value='08:00'; $('ende').value='16:45'; $('folge').value=''; $('autoPause').checked=false;
+    pl.innerHTML=''; addPause(30); calcDay();
+  });
+  $('copyBtn').addEventListener('click',()=>last&&copy(last.txt));
+  $('printBtn').addEventListener('click',()=>window.print());
+  $('shLink').addEventListener('click',()=>copy(location.href.split('#')[0]));
+
+  /* ===== Wöchentlich ===== */
+  const days=['Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag','Sonntag'];
+  const tb=$('wbody');
+  days.forEach(d=>{
+    tb.insertAdjacentHTML('beforeend','<tr><td class="day">'+d+'</td><td><input type="time" class="ws"></td><td><input type="time" class="we"></td><td><input type="number" class="wp" min="0" step="5" placeholder="0"></td><td class="out">–</td></tr>');
+  });
+  function calcWeek(){
+    let total=0, count=0;
+    tb.querySelectorAll('tr').forEach(r=>{
+      const s=toMin(r.querySelector('.ws').value), e=toMin(r.querySelector('.we').value), out=r.querySelector('.out');
+      if(s===null||e===null){ out.textContent='–'; return; }
+      const n=Math.max(0,span(s,e)-(parseInt(r.querySelector('.wp').value,10)||0));
+      out.textContent=fmt(n); total+=n; count++;
+    });
+    $('wTotal').textContent=fmt(total)+' ('+dez(total)+')';
+    $('wAvg').textContent=count?fmt(total/count):'0:00';
+    const diff=total-(parseFloat($('wSoll').value)||0)*60;
+    const d=$('wDiff'); d.textContent=sign(diff); d.className=diff>0?'pos':diff<0?'neg':'';
+  }
+  tb.addEventListener('input',calcWeek); $('wSoll').addEventListener('input',calcWeek);
+  $('toWeek').addEventListener('click',()=>{
+    if(!last) return;
+    const row=[...tb.querySelectorAll('tr')].find(r=>!r.querySelector('.ws').value);
+    if(!row){ toast('Die Woche ist bereits voll'); return; }
+    row.querySelector('.ws').value=last.start; row.querySelector('.we').value=last.ende; row.querySelector('.wp').value=last.pause;
+    calcWeek(); toast(row.querySelector('.day').textContent+' zur Wochenübersicht hinzugefügt');
+  });
+  $('wDemo').addEventListener('click',()=>{
+    const demo=[['08:00','16:45',30],['07:30','16:30',30],['08:00','17:15',45],['08:15','16:45',30],['08:00','14:00',0]];
+    tb.querySelectorAll('tr').forEach((r,i)=>{ const v=demo[i]||['','','']; r.querySelector('.ws').value=v[0]; r.querySelector('.we').value=v[1]; r.querySelector('.wp').value=v[2]; });
+    calcWeek();
+  });
+  $('wReset').addEventListener('click',()=>{ tb.querySelectorAll('input').forEach(i=>i.value=''); calcWeek(); });
+
+  /* ===== Monatlich ===== */
+  function calcMonth(){
+    const w=parseFloat(String($('mWoche').value).replace(',','.'))||0;
+    const t=Math.max(1,parseInt($('mTage').value,10)||5);
+    const lohn=parseFloat(String($('mLohn').value).replace(',','.'));
+    const mMin=w*60*52/12;
+    $('mMonat').innerHTML=dez(mMin)+'<small>Std.</small>';
+    $('mMonatHM').textContent=fmt(mMin);
+    $('mTag').textContent=fmt(w*60/t);
+    $('mJahr').textContent=(w*52).toLocaleString('de-DE',{maximumFractionDigits:1})+' Std.';
+    $('mGehalt').textContent=lohn>0?eur(mMin/60*lohn):'–';
+  }
+  ['mWoche','mTage','mLohn'].forEach(id=>$(id).addEventListener('input',calcMonth));
+
+  /* ===== Dezimal-Umrechner ===== */
+  function convZeit(){
+    const v=$('cZeit').value.trim(); let m=null;
+    if(/^\d+:\d{1,2}$/.test(v)){ const p=v.split(':'); m=(+p[0])*60+(+p[1]); }
+    else if(/^\d+$/.test(v)) m=(+v)*60;
+    $('cZeitOut').textContent=m===null?'–':dez(m);
+  }
+  function convDez(){
+    const v=parseFloat($('cDez').value.replace(',','.'));
+    $('cDezOut').textContent=isNaN(v)||v<0?'–':fmt(v*60);
+  }
+  $('cZeit').addEventListener('input',convZeit); $('cDez').addEventListener('input',convDez);
+
+  /* Mobile menu close on click */
+  document.querySelectorAll('.menu a').forEach(a=>a.addEventListener('click',()=>document.querySelector('.menu').classList.remove('open')));
+
+  $('jahr').textContent=new Date().getFullYear();
+  addPause(30); calcDay(); calcWeek(); calcMonth(); convZeit(); convDez();
+})();
+</script>
+</body>
+</html>
